@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎨 การปรับปรุง Header - Fruit Shop</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #fef7ed 0%, #f3f4f6 100%);
+            color: #111827;
+            line-height: 1.7;
+        }
+
+        [data-theme="dark"] body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #f8fafc;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .title {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #111827 0%, #f2741f 50%, #f59538 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+        }
+
+        [data-theme="dark"] .title {
+            background: linear-gradient(135deg, #f8fafc 0%, #f8bb71 50%, #fbd7a8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 1.25rem;
+            color: #6b7280;
+            margin-bottom: 40px;
+        }
+
+        [data-theme="dark"] .subtitle {
+            color: #94a3b8;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: 2px solid #e5e7eb;
+            cursor: pointer;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        [data-theme="dark"] .theme-toggle {
+            background: #1e293b;
+            border-color: #475569;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .section {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e5e7eb;
+        }
+
+        [data-theme="dark"] .section {
+            background: #1e293b;
+            border-color: #475569;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: #111827;
+        }
+
+        [data-theme="dark"] .section-title {
+            color: #f8fafc;
+        }
+
+        /* === IMPROVED HEADER === */
+        .main-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(254, 247, 237, 0.95) 100%);
+            backdrop-filter: blur(20px) saturate(180%);
+            border-bottom: 1px solid rgba(242, 116, 31, 0.1);
+            box-shadow: 0 4px 20px rgba(242, 116, 31, 0.1);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        [data-theme="dark"] .main-header {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.95) 100%);
+            border-bottom: 1px solid rgba(248, 187, 113, 0.1);
+            box-shadow: 0 4px 20px rgba(248, 187, 113, 0.1);
+        }
+
+        .navbar {
+            padding: 1rem 0;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2rem;
+        }
+
+        .nav-logo a {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: #111827;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        [data-theme="dark"] .nav-logo a {
+            color: #f8fafc;
+        }
+
+        .logo-icon {
+            font-size: 2rem;
+            color: #f2741f;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        [data-theme="dark"] .logo-icon {
+            color: #f8bb71;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #111827;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        [data-theme="dark"] .nav-link {
+            color: #f8fafc;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: linear-gradient(135deg, #f2741f, #e35a0f);
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(242, 116, 31, 0.3);
+        }
+
+        [data-theme="dark"] .nav-link:hover,
+        [data-theme="dark"] .nav-link.active {
+            background: linear-gradient(135deg, #f8bb71, #f59538);
+            box-shadow: 0 4px 12px rgba(248, 187, 113, 0.3);
+        }
+
+        .search-container {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(242, 116, 31, 0.2);
+            border-radius: 12px;
+            padding: 0.5rem;
+            min-width: 280px;
+            box-shadow: 0 2px 8px rgba(242, 116, 31, 0.1);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .search-container:focus-within {
+            border-color: #f2741f;
+            box-shadow: 0 0 0 3px rgba(242, 116, 31, 0.1), 0 4px 12px rgba(242, 116, 31, 0.2);
+            transform: translateY(-1px);
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        [data-theme="dark"] .search-container {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(248, 187, 113, 0.2);
+            box-shadow: 0 2px 8px rgba(248, 187, 113, 0.1);
+        }
+
+        [data-theme="dark"] .search-container:focus-within {
+            border-color: #f8bb71;
+            box-shadow: 0 0 0 3px rgba(248, 187, 113, 0.1), 0 4px 12px rgba(248, 187, 113, 0.2);
+            background: rgba(30, 41, 59, 0.95);
+        }
+
+        .search-input {
+            flex: 1;
+            border: none;
+            background: none;
+            padding: 0.5rem;
+            font-size: 0.9rem;
+            color: #111827;
+        }
+
+        [data-theme="dark"] .search-input {
+            color: #f8fafc;
+        }
+
+        .search-input:focus {
+            outline: none;
+        }
+
+        .search-input::placeholder {
+            color: #6b7280;
+        }
+
+        [data-theme="dark"] .search-input::placeholder {
+            color: #94a3b8;
+        }
+
+        .search-icon {
+            color: #6b7280;
+            margin-left: 0.5rem;
+        }
+
+        [data-theme="dark"] .search-icon {
+            color: #94a3b8;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .theme-toggle-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(242, 116, 31, 0.2);
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1.25rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(242, 116, 31, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .theme-toggle-btn:hover {
+            background: rgba(255, 255, 255, 0.95);
+            border-color: #f2741f;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(242, 116, 31, 0.2);
+        }
+
+        [data-theme="dark"] .theme-toggle-btn {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(248, 187, 113, 0.2);
+            box-shadow: 0 2px 8px rgba(248, 187, 113, 0.1);
+        }
+
+        [data-theme="dark"] .theme-toggle-btn:hover {
+            background: rgba(30, 41, 59, 0.95);
+            border-color: #f8bb71;
+            box-shadow: 0 4px 12px rgba(248, 187, 113, 0.2);
+        }
+
+        .cart-btn {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(242, 116, 31, 0.2);
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1.25rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(242, 116, 31, 0.1);
+            backdrop-filter: blur(10px);
+            color: #111827;
+        }
+
+        .cart-btn:hover {
+            background: rgba(255, 255, 255, 0.95);
+            border-color: #f2741f;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(242, 116, 31, 0.2);
+        }
+
+        [data-theme="dark"] .cart-btn {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(248, 187, 113, 0.2);
+            box-shadow: 0 2px 8px rgba(248, 187, 113, 0.1);
+            color: #f8fafc;
+        }
+
+        [data-theme="dark"] .cart-btn:hover {
+            background: rgba(30, 41, 59, 0.95);
+            border-color: #f8bb71;
+            box-shadow: 0 4px 12px rgba(248, 187, 113, 0.2);
+        }
+
+        .cart-count {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: linear-gradient(135deg, #f2741f, #e35a0f);
+            color: #ffffff;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 2px 6px;
+            border-radius: 50%;
+            min-width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(242, 116, 31, 0.3);
+        }
+
+        [data-theme="dark"] .cart-count {
+            background: linear-gradient(135deg, #f8bb71, #f59538);
+            box-shadow: 0 2px 8px rgba(248, 187, 113, 0.3);
+        }
+
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .comparison-card {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid #e5e7eb;
+            text-align: center;
+        }
+
+        [data-theme="dark"] .comparison-card {
+            background: #334155;
+            border-color: #475569;
+        }
+
+        .comparison-title {
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #111827;
+        }
+
+        [data-theme="dark"] .comparison-title {
+            color: #f8fafc;
+        }
+
+        .comparison-desc {
+            color: #6b7280;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        [data-theme="dark"] .comparison-desc {
+            color: #94a3b8;
+        }
+
+        .demo-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+            justify-content: center;
+        }
+
+        .demo-btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: #f2741f;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #e35a0f;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #374151;
+            border: 1px solid #d1d5db;
+        }
+
+        [data-theme="dark"] .btn-secondary {
+            background: #334155;
+            color: #f8fafc;
+            border-color: #475569;
+        }
+
+        .btn-secondary:hover {
+            background: #e5e7eb;
+            transform: translateY(-1px);
+        }
+
+        [data-theme="dark"] .btn-secondary:hover {
+            background: #475569;
+        }
+
+        @media (max-width: 768px) {
+            .comparison {
+                grid-template-columns: 1fr;
+            }
+            
+            .title {
+                font-size: 2rem;
+            }
+            
+            .section {
+                padding: 25px;
+            }
+            
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .search-container {
+                min-width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle">🌙</button>
+    
+    <!-- Improved Header -->
+    <header class="main-header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-logo">
+                    <a href="#home">
+                        <span class="logo-icon"><i class="fas fa-apple-alt"></i></span>
+                        <span class="logo-text">Fruit Shop</span>
+                    </a>
+                </div>
+                
+                <ul class="nav-menu">
+                    <li><a href="#home" class="nav-link active">หน้าแรก</a></li>
+                    <li><a href="products.html" class="nav-link">สินค้า</a></li>
+                    <li><a href="#about" class="nav-link">เกี่ยวกับเรา</a></li>
+                    <li><a href="#contact" class="nav-link">ติดต่อ</a></li>
+                </ul>
+                
+                <div class="search-container">
+                    <input type="text" class="search-input" placeholder="ค้นหาผลไม้...">
+                    <span class="search-icon"><i class="fas fa-search"></i></span>
+                </div>
+                
+                <div class="header-actions">
+                    <button class="theme-toggle-btn" onclick="toggleTheme()">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <button class="cart-btn">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count">0</span>
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+    
+    <div class="container" style="margin-top: 100px;">
+        <div class="header">
+            <h1 class="title">🎨 การปรับปรุง Header</h1>
+            <p class="subtitle">Header ที่สวยงามและเข้ากับธีมมากขึ้น</p>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">✨ การปรับปรุงที่ทำแล้ว</h2>
+            <div class="comparison">
+                <div class="comparison-card">
+                    <div class="comparison-title">❌ แบบเดิม (สีขาวธรรมดา)</div>
+                    <div class="comparison-desc">
+                        • พื้นหลังสีขาวธรรมดา<br>
+                        • ไม่มี Gradient<br>
+                        • ไม่มี Glass Effect<br>
+                        • Shadow ธรรมดา<br>
+                        • ดูไม่สวยงาม<br>
+                        • ไม่เข้ากับธีม
+                    </div>
+                </div>
+                <div class="comparison-card">
+                    <div class="comparison-title">✅ แบบใหม่ (สวยงาม)</div>
+                    <div class="comparison-desc">
+                        • พื้นหลัง Gradient สวยงาม<br>
+                        • Glass Effect ด้วย Backdrop Filter<br>
+                        • Shadow สีส้มเข้ากับธีม<br>
+                        • Animation สวยงาม<br>
+                        • ดูเป็นมืออาชีพ<br>
+                        • เข้ากับธีมส้ม
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">🎯 ฟีเจอร์ที่ปรับปรุง</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                <div style="background: #fef7ed; padding: 20px; border-radius: 12px; border: 1px solid #fbbf24;">
+                    <h3 style="color: #f2741f; margin-bottom: 10px;">🌈 Gradient Background</h3>
+                    <p style="color: #6b7280; font-size: 0.9rem;">พื้นหลังแบบ Gradient จากสีขาวไปสีส้มอ่อน สวยงามและเข้ากับธีม</p>
+                </div>
+                <div style="background: #fef7ed; padding: 20px; border-radius: 12px; border: 1px solid #fbbf24;">
+                    <h3 style="color: #f2741f; margin-bottom: 10px;">🔍 Glass Effect</h3>
+                    <p style="color: #6b7280; font-size: 0.9rem;">ใช้ Backdrop Filter เพื่อสร้าง Glass Effect ที่ทันสมัย</p>
+                </div>
+                <div style="background: #fef7ed; padding: 20px; border-radius: 12px; border: 1px solid #fbbf24;">
+                    <h3 style="color: #f2741f; margin-bottom: 10px;">✨ Enhanced Shadows</h3>
+                    <p style="color: #6b7280; font-size: 0.9rem;">Shadow สีส้มที่เข้ากับธีมและดูมีมิติมากขึ้น</p>
+                </div>
+                <div style="background: #fef7ed; padding: 20px; border-radius: 12px; border: 1px solid #fbbf24;">
+                    <h3 style="color: #f2741f; margin-bottom: 10px;">🎨 Dark Mode Support</h3>
+                    <p style="color: #6b7280; font-size: 0.9rem;">รองรับ Dark Mode ด้วยสีและ Gradient ที่เหมาะสม</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">🚀 วิธีทดสอบ</h2>
+            <div class="demo-buttons">
+                <button class="demo-btn btn-primary" onclick="window.location.href='index.html'">🏠 ไปหน้าแรก</button>
+                <button class="demo-btn btn-secondary" onclick="window.location.href='products.html'">🛒 ดูสินค้า</button>
+                <button class="demo-btn btn-primary" onclick="window.location.href='SIMPLE_DESIGN.html'">🎨 ดูการ์ดเรียบง่าย</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            if (newTheme === 'dark') {
+                html.setAttribute('data-theme', 'dark');
+            } else {
+                html.removeAttribute('data-theme');
+            }
+            
+            const themeIcon = document.getElementById('themeToggle');
+            const themeBtn = document.querySelector('.theme-toggle-btn i');
+            themeIcon.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+            themeBtn.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        }
+
+        // Initialize theme
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                document.getElementById('themeToggle').textContent = '☀️';
+                document.querySelector('.theme-toggle-btn i').className = 'fas fa-sun';
+            }
+        });
+    </script>
+</body>
+</html>

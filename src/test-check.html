@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔍 System Check - Fruit Shop</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .check-item { margin: 10px 0; padding: 10px; border-radius: 5px; }
+        .pass { background: #d4edda; color: #155724; }
+        .fail { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+        h1 { color: #ff6b35; }
+        .code { font-family: monospace; background: #f8f9fa; padding: 2px 5px; }
+    </style>
+</head>
+<body>
+    <h1>🔍 ระบบตรวจสอบ Fruit Shop</h1>
+    <div id="results">กำลังตรวจสอบ...</div>
+
+    <script src="js/utils.js"></script>
+    <script src="js/data-manager.js"></script>
+    <script>
+        async function runSystemCheck() {
+            const results = document.getElementById('results');
+            results.innerHTML = '';
+            
+            function addResult(message, status = 'info') {
+                const div = document.createElement('div');
+                div.className = `check-item ${status}`;
+                div.innerHTML = message;
+                results.appendChild(div);
+            }
+            
+            addResult('🚀 เริ่มการตรวจสอบระบบ...', 'info');
+            
+            // 1. ตรวจสอบ Utils
+            try {
+                const testPrice = Utils.formatPrice(1250);
+                if (testPrice === '฿1,250') {
+                    addResult('✅ Utils.formatPrice() ทำงานได้ถูกต้อง', 'pass');
+                } else {
+                    addResult('❌ Utils.formatPrice() ทำงานไม่ถูกต้อง', 'fail');
+                }
+            } catch (e) {
+                addResult('❌ Utils library โหลดไม่สำเร็จ: ' + e.message, 'fail');
+            }
+            
+            // 2. ตรวจสอบ DataManager
+            try {
+                const dm = new DataManager();
+                addResult('✅ DataManager class สร้างได้', 'pass');
+                
+                // ทดสอบโหลดข้อมูล
+                const loadResult = await dm.loadData();
+                if (dm.products.length > 0) {
+                    addResult(`✅ โหลดข้อมูลสินค้าได้ ${dm.products.length} รายการ`, 'pass');
+                } else {
+                    addResult('⚠️ ไม่มีข้อมูลสินค้า หรือโหลดไม่สำเร็จ', 'fail');
+                }
+                
+                if (dm.categories.length > 0) {
+                    addResult(`✅ โหลดหมวดหมู่ได้ ${dm.categories.length} หมวด`, 'pass');
+                } else {
+                    addResult('⚠️ ไม่มีข้อมูลหมวดหมู่', 'fail');
+                }
+                
+            } catch (e) {
+                addResult('❌ DataManager มีปัญหา: ' + e.message, 'fail');
+            }
+            
+            // 3. ตรวจสอบ Local Storage
+            try {
+                Utils.saveToStorage('test', {test: 'value'});
+                const loaded = Utils.loadFromStorage('test');
+                if (loaded && loaded.test === 'value') {
+                    addResult('✅ Local Storage ทำงานได้', 'pass');
+                    Utils.removeFromStorage('test');
+                } else {
+                    addResult('❌ Local Storage ทำงานไม่ได้', 'fail');
+                }
+            } catch (e) {
+                addResult('❌ Local Storage มีปัญหา: ' + e.message, 'fail');
+            }
+            
+            // 4. ตรวจสอบไฟล์ CSS
+            const cssLinks = document.querySelectorAll('link[rel="stylesheet"]');
+            if (cssLinks.length >= 2) {
+                addResult('✅ ไฟล์ CSS ถูกโหลด', 'pass');
+            } else {
+                addResult('⚠️ ไฟล์ CSS อาจขาดหาย', 'fail');
+            }
+            
+            // 5. ตรวจสอบ Responsive Functions
+            try {
+                const screenInfo = Utils.getScreenSize();
+                addResult(`✅ Screen Size Detection: ${screenInfo.width}x${screenInfo.height} (${screenInfo.size})`, 'pass');
+                
+                const isMob = Utils.isMobile();
+                addResult(`ℹ️ อุปกรณ์: ${isMob ? 'Mobile' : 'Desktop/Tablet'}`, 'info');
+            } catch (e) {
+                addResult('❌ Responsive functions มีปัญหา: ' + e.message, 'fail');
+            }
+            
+            // 6. ตรวจสอบการทำงานของระบบค้นหา
+            try {
+                const dm = dataManager || new DataManager();
+                if (dm.products.length > 0) {
+                    const searchResult = dm.searchProducts('แอป');
+                    addResult(`✅ ระบบค้นหาทำงานได้ พบ ${searchResult.length} รายการ`, 'pass');
+                }
+            } catch (e) {
+                addResult('❌ ระบบค้นหามีปัญหา: ' + e.message, 'fail');
+            }
+            
+            // สรุปผล
+            addResult('📊 การตรวจสอบเสร็จสิ้น', 'info');
+            
+            const passCount = document.querySelectorAll('.pass').length;
+            const failCount = document.querySelectorAll('.fail').length;
+            
+            if (failCount === 0) {
+                addResult(`🎉 ระบบพร้อมใช้งาน! (ผ่าน ${passCount} การทดสอบ)`, 'pass');
+            } else {
+                addResult(`⚠️ พบปัญหา ${failCount} รายการ จาก ${passCount + failCount} การทดสอบ`, 'fail');
+            }
+            
+            // เพิ่มลิงก์ไปยังหน้าหลัก
+            addResult(`
+                <strong>🔗 ลิงก์ทดสอบ:</strong><br>
+                <a href="index.html" target="_blank">📄 หน้าแรก</a> | 
+                <a href="products.html" target="_blank">🛒 รายการสินค้า</a><br>
+                <small>เปิดในแท็บใหม่เพื่อทดสอบ</small>
+            `, 'info');
+        }
+        
+        // เริ่มการตรวจสอบเมื่อหน้าโหลดเสร็จ
+        window.addEventListener('load', runSystemCheck);
+    </script>
+</body>
+</html>

@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎨 การปรับปรุงการ์ดสินค้าแบบธรรมชาติ - Fruit Shop</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #fef7ed 0%, #f3f4f6 100%);
+            color: #111827;
+            line-height: 1.7;
+        }
+
+        [data-theme="dark"] body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #f8fafc;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .title {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #111827 0%, #f2741f 50%, #f59538 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+        }
+
+        [data-theme="dark"] .title {
+            background: linear-gradient(135deg, #f8fafc 0%, #f8bb71 50%, #fbd7a8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 1.25rem;
+            color: #6b7280;
+            margin-bottom: 40px;
+        }
+
+        [data-theme="dark"] .subtitle {
+            color: #94a3b8;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: 2px solid #e5e7eb;
+            cursor: pointer;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        [data-theme="dark"] .theme-toggle {
+            background: #1e293b;
+            border-color: #475569;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .section {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e5e7eb;
+        }
+
+        [data-theme="dark"] .section {
+            background: #1e293b;
+            border-color: #475569;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: #111827;
+        }
+
+        [data-theme="dark"] .section-title {
+            color: #f8fafc;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        /* === NATURAL PRODUCT CARD === */
+        .product-card {
+            position: relative;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        [data-theme="dark"] .product-card {
+            background: #1e293b;
+            border: 1px solid #475569;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+            border-color: #f59538;
+        }
+
+        [data-theme="dark"] .product-card:hover {
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            border-color: #f8bb71;
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            display: inline-block;
+            background: #10b981;
+            color: #ffffff;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            z-index: 10;
+        }
+
+        .product-image {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .product-emoji {
+            font-size: 4rem;
+            display: block;
+            margin-bottom: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover .product-emoji {
+            transform: scale(1.05);
+        }
+
+        .product-info h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 0.5rem;
+        }
+
+        [data-theme="dark"] .product-info h3 {
+            color: #f8fafc;
+        }
+
+        .product-description {
+            color: #6b7280;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        [data-theme="dark"] .product-description {
+            color: #94a3b8;
+        }
+
+        .product-price {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .price-current {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #e35a0f;
+        }
+
+        [data-theme="dark"] .price-current {
+            color: #f8bb71;
+        }
+
+        .price-original {
+            font-size: 1rem;
+            color: #9ca3af;
+            text-decoration: line-through;
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-add-cart {
+            flex: 1;
+            background: #f2741f;
+            color: #ffffff;
+            border: none;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-add-cart:hover {
+            background: #e35a0f;
+            transform: translateY(-1px);
+        }
+
+        .btn-quick-view {
+            background: #f3f4f6;
+            color: #111827;
+            border: 1px solid #d1d5db;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        [data-theme="dark"] .btn-quick-view {
+            background: #334155;
+            color: #f8fafc;
+            border-color: #475569;
+        }
+
+        .btn-quick-view:hover {
+            background: #e5e7eb;
+            border-color: #f59538;
+        }
+
+        [data-theme="dark"] .btn-quick-view:hover {
+            background: #475569;
+            border-color: #f8bb71;
+        }
+
+        /* === NATURAL CATEGORY CARD === */
+        .category-card {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 1px solid #e5e7eb;
+        }
+
+        [data-theme="dark"] .category-card {
+            background: #1e293b;
+            border: 1px solid #475569;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .category-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+            background: #f2741f;
+            color: #ffffff;
+            border-color: #f59538;
+        }
+
+        [data-theme="dark"] .category-card:hover {
+            background: #f8bb71;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            border-color: #fbd7a8;
+        }
+
+        .category-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .category-icon i {
+            font-size: 3.5rem;
+            color: #f2741f;
+            transition: all 0.3s ease;
+        }
+
+        .category-card:hover .category-icon i {
+            color: #ffffff;
+            transform: scale(1.05);
+        }
+
+        .category-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: #111827;
+        }
+
+        [data-theme="dark"] .category-title {
+            color: #f8fafc;
+        }
+
+        .category-card:hover .category-title {
+            color: #ffffff;
+        }
+
+        .category-description {
+            color: #6b7280;
+            margin-bottom: 1rem;
+            transition: color 0.3s ease;
+        }
+
+        [data-theme="dark"] .category-description {
+            color: #94a3b8;
+        }
+
+        .category-card:hover .category-description {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .category-count {
+            background: #fbbf24;
+            color: #111827;
+            padding: 0.25rem 1rem;
+            border-radius: 25px;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .category-card:hover .category-count {
+            background: #ffffff;
+            color: #f2741f;
+        }
+
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .comparison-card {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid #e5e7eb;
+            text-align: center;
+        }
+
+        [data-theme="dark"] .comparison-card {
+            background: #334155;
+            border-color: #475569;
+        }
+
+        .comparison-title {
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #111827;
+        }
+
+        [data-theme="dark"] .comparison-title {
+            color: #f8fafc;
+        }
+
+        .comparison-desc {
+            color: #6b7280;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        [data-theme="dark"] .comparison-desc {
+            color: #94a3b8;
+        }
+
+        .demo-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+            justify-content: center;
+        }
+
+        .demo-btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: #f2741f;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #e35a0f;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #374151;
+            border: 1px solid #d1d5db;
+        }
+
+        [data-theme="dark"] .btn-secondary {
+            background: #334155;
+            color: #f8fafc;
+            border-color: #475569;
+        }
+
+        .btn-secondary:hover {
+            background: #e5e7eb;
+            transform: translateY(-1px);
+        }
+
+        [data-theme="dark"] .btn-secondary:hover {
+            background: #475569;
+        }
+
+        @media (max-width: 768px) {
+            .comparison {
+                grid-template-columns: 1fr;
+            }
+            
+            .title {
+                font-size: 2rem;
+            }
+            
+            .section {
+                padding: 25px;
+            }
+            
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle">🌙</button>
+    
+    <div class="container">
+        <div class="header">
+            <h1 class="title">🎨 การปรับปรุงการ์ดสินค้าแบบธรรมชาติ</h1>
+            <p class="subtitle">Product Cards และ Category Cards ที่ดูเป็นธรรมชาติและสวยงาม</p>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">🛒 Product Cards แบบธรรมชาติ</h2>
+            <div class="cards-grid">
+                <div class="product-card">
+                    <div class="product-badge">ขายดี</div>
+                    <div class="product-image">
+                        <span class="product-emoji">🍎</span>
+                    </div>
+                    <div class="product-info">
+                        <h3>แอปเปิ้ลแดงพรีเมียม</h3>
+                        <p class="product-description">แอปเปิ้ลแดงหวานกรอบ นำเข้าจากนิวซีแลนด์ คุณภาพสูง</p>
+                        <div class="product-price">
+                            <span class="price-current">฿120</span>
+                            <span class="price-original">฿150</span>
+                        </div>
+                        <div class="product-actions">
+                            <button class="btn-add-cart">
+                                <i class="fas fa-shopping-cart"></i> เพิ่มลงตะกร้า
+                            </button>
+                            <button class="btn-quick-view">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-badge">ใหม่</div>
+                    <div class="product-image">
+                        <span class="product-emoji">🍊</span>
+                    </div>
+                    <div class="product-info">
+                        <h3>ส้มเขียวหวาน</h3>
+                        <p class="product-description">ส้มเขียวหวานฉ่ำน้ำ หวานอมเปรี้ยว วิตามินซีสูง</p>
+                        <div class="product-price">
+                            <span class="price-current">฿80</span>
+                            <span class="price-original">฿100</span>
+                        </div>
+                        <div class="product-actions">
+                            <button class="btn-add-cart">
+                                <i class="fas fa-shopping-cart"></i> เพิ่มลงตะกร้า
+                            </button>
+                            <button class="btn-quick-view">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-badge">ลดพิเศษ</div>
+                    <div class="product-image">
+                        <span class="product-emoji">🍌</span>
+                    </div>
+                    <div class="product-info">
+                        <h3>กล้วยหอมทอง</h3>
+                        <p class="product-description">กล้วยหอมทองหวานนุ่ม เนื้อหนา กลิ่นหอม</p>
+                        <div class="product-price">
+                            <span class="price-current">฿45</span>
+                            <span class="price-original">฿60</span>
+                        </div>
+                        <div class="product-actions">
+                            <button class="btn-add-cart">
+                                <i class="fas fa-shopping-cart"></i> เพิ่มลงตะกร้า
+                            </button>
+                            <button class="btn-quick-view">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">📂 Category Cards แบบธรรมชาติ</h2>
+            <div class="cards-grid">
+                <div class="category-card">
+                    <div class="category-icon">
+                        <i class="fas fa-apple-alt"></i>
+                    </div>
+                    <h3 class="category-title">ผลไม้สด</h3>
+                    <p class="category-description">ผลไม้สดใหม่ เก็บเกี่ยวใหม่ทุกวัน</p>
+                    <span class="category-count">15 รายการ</span>
+                </div>
+
+                <div class="category-card">
+                    <div class="category-icon">
+                        <i class="fas fa-drumstick-bite"></i>
+                    </div>
+                    <h3 class="category-title">ผลไม้แห้ง</h3>
+                    <p class="category-description">ผลไม้แห้งคุณภาพ ไม่ใส่สารกันเสีย</p>
+                    <span class="category-count">8 รายการ</span>
+                </div>
+
+                <div class="category-card">
+                    <div class="category-icon">
+                        <i class="fas fa-wine-bottle"></i>
+                    </div>
+                    <h3 class="category-title">ผลไม้แปรรูป</h3>
+                    <p class="category-description">น้ำผลไม้ แยม และผลิตภัณฑ์จากผลไม้</p>
+                    <span class="category-count">12 รายการ</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">📊 การเปรียบเทียบ</h2>
+            <div class="comparison">
+                <div class="comparison-card">
+                    <div class="comparison-title">❌ แบบเดิม (แปลก)</div>
+                    <div class="comparison-desc">
+                        • กรอบโค้งมากเกินไป (20px)<br>
+                        • Shadow หนักเกินไป<br>
+                        • Animation แบบแปลก<br>
+                        • Glass Effect มากเกินไป<br>
+                        • Hover Effect แบบแปลก<br>
+                        • ดูไม่เป็นธรรมชาติ
+                    </div>
+                </div>
+                <div class="comparison-card">
+                    <div class="comparison-title">✅ แบบใหม่ (ธรรมชาติ)</div>
+                    <div class="comparison-desc">
+                        • กรอบโค้งพอดี (16px)<br>
+                        • Shadow นุ่มนวล<br>
+                        • Animation เรียบง่าย<br>
+                        • ไม่มี Glass Effect<br>
+                        • Hover Effect ธรรมชาติ<br>
+                        • ดูเป็นธรรมชาติ
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">🚀 วิธีทดสอบ</h2>
+            <div class="demo-buttons">
+                <button class="demo-btn btn-primary" onclick="window.location.href='index.html'">🏠 ไปหน้าแรก</button>
+                <button class="demo-btn btn-secondary" onclick="window.location.href='products.html'">🛒 ดูสินค้า</button>
+                <button class="demo-btn btn-primary" onclick="window.location.href='COLOR_IMPROVEMENTS.html'">🎨 ดูโทนสี</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            if (newTheme === 'dark') {
+                html.setAttribute('data-theme', 'dark');
+            } else {
+                html.removeAttribute('data-theme');
+            }
+            
+            const themeIcon = document.getElementById('themeToggle');
+            themeIcon.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+        }
+
+        // Initialize theme
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                document.getElementById('themeToggle').textContent = '☀️';
+            }
+        });
+    </script>
+</body>
+</html>
